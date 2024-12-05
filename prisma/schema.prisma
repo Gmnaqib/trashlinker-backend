@@ -14,8 +14,37 @@ datasource db {
 }
 
 
-model User {
+model user {
   id      Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String?
+  email     String   @unique
+  username  String
+  password  String
+  role  Role  @default(USER)
+  posts     post[]
+}
+
+enum Role {
+  USER
+  COMMUNITY
+  ADMIN
+}
+
+model post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  published Boolean  @default(false)
+  userId  Int
+  tpaId Int
+  User    user     @relation(fields: [userId], references: [id])
+  tpa tpa @relation(fields: [tpaId], references: [id])
+}
+
+model tpa {
+  id        Int      @id @default(autoincrement())
+  tpa_name     String
+  tpa_location   String
+  tpa_image   String
+  tpa_description   String
+  Post post[]
 }
