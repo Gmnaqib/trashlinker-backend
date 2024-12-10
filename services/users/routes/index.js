@@ -3,6 +3,6 @@ const router = express.Router();
 const {getAllUsers} = require('../repository/index');
 
 
-router.get('/halo', getAllUsers);
+router.get('/ini-user', getAllUsers);
 
 module.exports = router;
