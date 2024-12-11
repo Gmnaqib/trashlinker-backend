@@ -7,7 +7,7 @@ async function connectToDatabase() {
     host: 'localhost',
     user: 'root', // Ganti dengan username Anda
     password:'', // Ganti dengan password Anda
-    database: 'trash-linker', // Ganti dengan nama database Anda
+    database: 'trash_linker', // Ganti dengan nama database Anda
   });
 }
 
