@@ -1,5 +1,6 @@
 const mysql = require('mysql2/promise');
-const DATABASE_URL = process.env.DATABASE_URL || 'mysql://root:@localhost:3306/trash_linker';
+require('dotenv').config();
+const DATABASE_URL = process.env.DATABASE_URL
 const pool = mysql.createPool(DATABASE_URL);
 
 
