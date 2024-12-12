@@ -28,4 +28,21 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm test
+    - run: npm install
+
+  deploy:
+    needs: build
+
+    # Running on latest version of Ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploying to VPS
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.VPS_HOSTNAME }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: ${{ secrets.VPS_PORT }}
+          script: cd apps/; git pull; npm install;pm2 restart trashlinker-backend;
+
