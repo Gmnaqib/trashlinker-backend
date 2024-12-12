@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [23.x]
+        node-version: [22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -40,5 +40,6 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
           port: ${{ secrets.VPS_PORT }}
-          script: cd apps/trashlinker-backend; git pull;
+          script: cd apps/trashlinker-backend; git pull; npm install;pm2 restart trashlinker-backend;
+
 
