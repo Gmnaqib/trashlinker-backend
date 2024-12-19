@@ -5,6 +5,7 @@ module.exports = {
   addUser: async (req, res) => {
     const { email, username, password, address, role } = req.body;
     try {
+      // belum ada validasi email sudah ada atau belum
         const checkUser = await userRepo.getAllUsersEmailRepository(email);
         const newUser = await userRepo.addUserRepository(email, username, password, address, role);
         return res.json({User: req.body});
