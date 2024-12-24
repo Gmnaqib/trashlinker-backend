@@ -38,8 +38,7 @@ jobs:
         with:
           host: ${{ secrets.VPS_HOSTNAME }}
           username: ${{ secrets.VPS_USERNAME }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          port: ${{ secrets.VPS_PORT }}
+          key: ${{ secrets.VPS_KEY }}
           script: cd apps/trashlinker-backend; git pull; npm install;pm2 restart 0;
 
 
