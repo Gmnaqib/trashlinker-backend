@@ -1,7 +1,4 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Node.js CI
+name: Node.js CI/CD
 
 on:
   push:
@@ -11,36 +8,42 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - name: Install SSH
-      run: sudo apt-get install openssh-client
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - name: Install SSH
+        run: sudo apt-get install openssh-client
+      
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
   deploy:
     needs: build
-
-    # Running on latest version of Ubuntu
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploying to VPS
-        uses: appleboy/ssh-action@v0.1.4
+      - name: Setup SSH Agent
+        uses: webfactory/ssh-agent@v0.5.4
         with:
-          host: ${{ secrets.VPS_HOSTNAME }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.VPS_KEY }}
-          script: cd apps/trashlinker-backend; git pull; npm install;pm2 restart 0;
+          ssh-private-key: ${{ secrets.VPS_KEY }}
 
-
+      - name: Deploy Application to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOSTNAME }} << 'EOF'
+          cd apps/trashlinker-backend
+          git pull
+          npm install
+          pm2 restart 0
+          EOF
