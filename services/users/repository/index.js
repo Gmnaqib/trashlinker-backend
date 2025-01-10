@@ -1,4 +1,5 @@
 const db = require("../../../config/database");
+const bcrypt = require("bcrypt");
 
 class UserRepository {
   constructor(email, username, password, address, role) {
@@ -8,27 +9,36 @@ class UserRepository {
     this.address = address;
     this.role = role;
   }
-  
-  async addUserRepository (email, username, password, address, role)  {
+
+  async addUserRepository(email, username, password, address, role) {
+    const passwordHash = bcrypt.hashSync(password, 10);
     try {
-      const [rows]= await db.query(
+      const [rows] = await db.query(
         "INSERT INTO user (email, username, password, address, role) VALUES (?, ?, ?, ?, ?)",
-        [email, username, password, address, role]
+        [email, username, (password = passwordHash), address, role]
       );
+
+      if (result.affectedRows > 0) {
+        return {
+          success: true,
+          data: {
+            email,
+            username,
+            address,
+            role,
+            password: passwordHash,
+          },
+        };
+      } else {
+        return {
+          success: false,
+          message: "Registration failed",
+        };
+      }
     } catch (error) {
       return error;
     }
-  };
-  async getAllUsersEmailRepository() {
-    try {
-      const [rows] = await db.query("SELECT * FROM user where email = ?", [this.email]);
-      return "success";
-    } catch (error) {
-      return error;
-    }
-  };
+  }
 }
 
-module.exports = UserRepository; 
-
-
+module.exports = UserRepository;

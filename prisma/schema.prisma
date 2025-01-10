@@ -13,15 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model user {
-  id      Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String
-  password  String
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  username String
+  password String
   address  String
-  role  Role  @default(USER)
-  posts     post[]
+  role     Role   @default(USER)
+  posts    post[]
 }
 
 enum Role {
@@ -31,24 +30,24 @@ enum Role {
 }
 
 model post {
-  id        Int      @id @default(autoincrement())
-  title     String?
-  description   String?
-  image   String
-  location   String
+  id          Int      @id @default(autoincrement())
+  title       String?
+  description String?
+  image       String
+  location    String
   volunteer   Json?
-  schedule   DateTime
-  userId  Int
-  tpaId Int
-  User    user     @relation(fields: [userId], references: [id])
-  tpa tpa @relation(fields: [tpaId], references: [id])
+  schedule    DateTime
+  userId      Int
+  tpaId       Int
+  User        user     @relation(fields: [userId], references: [id])
+  tpa         tpa      @relation(fields: [tpaId], references: [id])
 }
 
 model tpa {
-  id        Int      @id @default(autoincrement())
-  tpa_name     String
-  tpa_location   String
-  tpa_image   String
-  tpa_description   String
-  Post post[]
+  id              Int    @id @default(autoincrement())
+  tpa_name        String
+  tpa_location    String
+  tpa_image       String
+  tpa_description String
+  Post            post[]
 }
