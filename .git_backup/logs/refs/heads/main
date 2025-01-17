@@ -1,0 +1,23 @@
+0000000000000000000000000000000000000000 6f6776f95a6a7c28baa4b54f4e158dc0a2e72363 Gumilarmn <Gumilarmn16@gmail.com> 1733380019 +0700	commit (initial): initiate project
+6f6776f95a6a7c28baa4b54f4e158dc0a2e72363 6f6776f95a6a7c28baa4b54f4e158dc0a2e72363 Gumilarmn <Gumilarmn16@gmail.com> 1733380060 +0700	Branch: renamed refs/heads/master to refs/heads/main
+6f6776f95a6a7c28baa4b54f4e158dc0a2e72363 6f6776f95a6a7c28baa4b54f4e158dc0a2e72363 Gumilarmn <Gumilarmn16@gmail.com> 1733380619 +0700	Branch: renamed refs/heads/main to refs/heads/main
+6f6776f95a6a7c28baa4b54f4e158dc0a2e72363 6ae178f37569762c6875c0549de6d12bcbc0406a Gumilarmn <Gumilarmn16@gmail.com> 1733406937 +0700	commit: add prisma scheme
+6ae178f37569762c6875c0549de6d12bcbc0406a 35412160332fd6a522b81052a1e69f479ddedcb9 Gumilarmn <Gumilarmn16@gmail.com> 1733407387 +0700	commit: add example env
+35412160332fd6a522b81052a1e69f479ddedcb9 08ce11234c22b0e70884a849d9088cdf10927603 Gumilarmn <Gumilarmn16@gmail.com> 1733839992 +0700	commit: revision
+08ce11234c22b0e70884a849d9088cdf10927603 aef19d6c3b0de74fbb18d638230990b66438b279 Gumilarmn <Gumilarmn16@gmail.com> 1733904703 +0700	commit: change name
+aef19d6c3b0de74fbb18d638230990b66438b279 ef003a2b5dbfdeb9d461f67be6cab0c33844b57f Gumilarmn <Gumilarmn16@gmail.com> 1733905441 +0700	pull https://github.com/Gmnaqib/trashlinker-backend.git: Fast-forward
+ef003a2b5dbfdeb9d461f67be6cab0c33844b57f 46c21141dd64b284c11eed499bd7f64521475d47 Gumilarmn <Gumilarmn16@gmail.com> 1733905953 +0700	commit: change env
+46c21141dd64b284c11eed499bd7f64521475d47 a866f48d04d2dcd2bb1770d3f71725d99ba56cff Gumilarmn <Gumilarmn16@gmail.com> 1733906854 +0700	commit: change migration
+a866f48d04d2dcd2bb1770d3f71725d99ba56cff 53b8a8efff10a00138e6950d5e4e999d77a7dc2b Gumilarmn <Gumilarmn16@gmail.com> 1733983378 +0700	commit: fix database
+53b8a8efff10a00138e6950d5e4e999d77a7dc2b 546a04a5db52b45d8ae3e23ae94c3cb4074c07a6 Gumilarmn <Gumilarmn16@gmail.com> 1733983690 +0700	commit: fix database2
+546a04a5db52b45d8ae3e23ae94c3cb4074c07a6 40115addea617f0059fc0f88a9911bb7fd080c1a Gumilarmn <Gumilarmn16@gmail.com> 1733983988 +0700	commit: fix action
+40115addea617f0059fc0f88a9911bb7fd080c1a e32dfcfe5923d8dbe9f82873a3f7bbb73ff4694e Gumilarmn <Gumilarmn16@gmail.com> 1733984083 +0700	commit: fix CI/CD
+e32dfcfe5923d8dbe9f82873a3f7bbb73ff4694e 0ce4fd8e6e27b3b56420107f9f88d815162c79e7 Gumilarmn <Gumilarmn16@gmail.com> 1733984601 +0700	commit: fix CI/CD
+0ce4fd8e6e27b3b56420107f9f88d815162c79e7 3a3a450f4b8c7096d16259fd9baac15a652bf16d Gumilarmn <Gumilarmn16@gmail.com> 1733984946 +0700	commit: fix CI/CD
+3a3a450f4b8c7096d16259fd9baac15a652bf16d 162f9a45cb3f456800e2e3379dd8ad7edf1c523f Gumilarmn <Gumilarmn16@gmail.com> 1733985391 +0700	commit: fix CI/CD
+162f9a45cb3f456800e2e3379dd8ad7edf1c523f d60e0d32c66105d35c4a3ee8c5880c20f636bc89 Gumilarmn <Gumilarmn16@gmail.com> 1733995321 +0700	commit: fix CI/CD
+d60e0d32c66105d35c4a3ee8c5880c20f636bc89 ddd0cfc0f6ed5d6b89e4a548ff9a86744fbce53a Gumilarmn <Gumilarmn16@gmail.com> 1733995733 +0700	commit: fix script CI/CD
+ddd0cfc0f6ed5d6b89e4a548ff9a86744fbce53a 13f87b627cb4cf324c71b11044662afe679b5fc8 Gumilarmn <gumilarmn@gmail.com> 1734582210 +0700	commit: implement user registration and database integration
+13f87b627cb4cf324c71b11044662afe679b5fc8 9c856070c892e30ab27220dd45eb8c3c88f73065 Gumilarmn <gumilarmn@gmail.com> 1734582260 +0700	commit: refactor error logging in addUser function
+9c856070c892e30ab27220dd45eb8c3c88f73065 0d4b71e703d7029daa87d0b59854284bc85720d4 Gumilarmn <gumilarmn@gmail.com> 1734582320 +0700	commit: need validation check for existing email in addUser function for duplicate data
+0d4b71e703d7029daa87d0b59854284bc85720d4 6cba9897fb671952a62f925b39789ae35629a789 Gumilarmn <gumilarmn@gmail.com> 1736223280 +0700	pull --tags origin main: Fast-forward
