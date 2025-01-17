@@ -14,13 +14,25 @@ datasource db {
 }
 
 model user {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  username String
-  password String
-  address  String
-  role     Role   @default(USER)
-  posts    post[]
+  id         Int         @id @default(autoincrement())
+  email      String      @unique
+  username   String
+  password   String
+  address    String
+  longitude  Float?
+  latitude   Float?
+  role       Role        @default(USER)
+  posts      post[]
+  volunteers volunteer[]
+}
+
+model volunteer {
+  id      Int     @id @default(autoincrement())
+  checkin Boolean @default(false)
+  userId  Int
+  postId  Int
+  user    user    @relation(fields: [userId], references: [id])
+  post    post    @relation(fields: [postId], references: [id])
 }
 
 enum Role {
@@ -30,17 +42,24 @@ enum Role {
 }
 
 model post {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   title       String?
   description String?
+  type        Type        @default(Volunteer)
   image       String
-  location    String
-  volunteer   Json?
-  schedule    DateTime
+  longitude   Float
+  latitude    Float
+  volunteer   volunteer[]
+  schedule    DateTime?
   userId      Int
   tpaId       Int
-  User        user     @relation(fields: [userId], references: [id])
-  tpa         tpa      @relation(fields: [tpaId], references: [id])
+  User        user        @relation(fields: [userId], references: [id])
+  tpa         tpa         @relation(fields: [tpaId], references: [id])
+}
+
+enum Type {
+  Volunteer
+  report
 }
 
 model tpa {

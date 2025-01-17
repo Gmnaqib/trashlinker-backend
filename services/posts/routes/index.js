@@ -1,10 +1,9 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const {addPost} = require('../controller');
+const { addPost, joinVolunteer } = require("../controller");
+const upload = require("../../../utils/upload");
 
-
-// router.get('/ini-user', getAllUsers);
-router.post('/post', addPost);
-// router.get('/post', addPost);
+router.post("/", upload.single("image"), addPost);
+router.post("/join", joinVolunteer);
 
 module.exports = router;

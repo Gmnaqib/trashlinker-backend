@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
   res.json({ message: "Halo, selamat datang di API users" });
 });
 router.use("/user", userRoutes);
-router.use("/posts", postRoutes);
+router.use("/post", postRoutes);
 router.use("/auth", authRoutes);
 
 module.exports = router;
