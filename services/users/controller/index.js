@@ -3,21 +3,12 @@ const userRepo = new UserRepository();
 
 module.exports = {
   addUser: async (req, res) => {
-    const { email, username, password, address, role } = req.body;
+    const { email, username, password, address, longitude, latitude, role } = req.body;
     try {
-      // belum ada validasi email sudah ada atau belum
-      // const checkUser = await userRepo.getAllUsersEmailRepository(email);
-      const newUser = await userRepo.addUserRepository(
-        email,
-        username,
-        password,
-        address,
-        role
-      );
-      return res.json({ message: "Registration Success" });
+        const newUser = await userRepo.addUserRepository(email,username,password,address,longitude,latitude,role);
+        return res.json({ message: "Registration Success", data: req.body });
     } catch (error) {
-      console.error("Error in addUser:", error);
-      return res.status(500).json({ error: "Terjadi kesalahan pada server" });
+        return res.status(500).json({ error: "Email sudah terdaftar" });
     }
   },
 };
