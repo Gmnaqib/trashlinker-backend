@@ -24,21 +24,24 @@ model user {
   role       Role        @default(USER)
   posts      post[]
   volunteers volunteer[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @default(now()) @updatedAt
 }
 
 model volunteer {
-  id      Int     @id @default(autoincrement())
-  checkin Boolean @default(false)
-  userId  Int
-  postId  Int
-  user    user    @relation(fields: [userId], references: [id])
-  post    post    @relation(fields: [postId], references: [id])
+  id        Int      @id @default(autoincrement())
+  checkin   Boolean  @default(false)
+  userId    Int
+  postId    Int
+  user      user     @relation(fields: [userId], references: [id])
+  post      post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 enum Role {
   USER
   COMMUNITY
-  ADMIN
 }
 
 model post {
