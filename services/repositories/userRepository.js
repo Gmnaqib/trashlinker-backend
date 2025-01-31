@@ -27,6 +27,15 @@ class UserRepository {
             throw new Error(`Database error: ${error.message}`);
         }
     }
+
+    async getUserById(id) {
+        try {
+            const [rows] = await db.query("SELECT id, email, username, address, longitude, latitude, role, createdAt, updatedAt FROM user WHERE id = ?", [id]);
+            return rows.length > 0 ? rows[0] : null;
+        } catch (error) {
+            throw new Error(`Database error: ${error.message}`);
+        }
+    }
 }
 
 module.exports = new UserRepository();

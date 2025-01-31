@@ -1,31 +1,36 @@
 const postRepository = require("../repositories/postRepository");
-const volunteerRepository = require("../repositories/volunteerRepository");
 
 module.exports = {
     addPost: async (req, res) => {
         const { id: userId } = req.userData;
-        const { title, description, longitude, latitude, schedule, tpaId } = req.body;
+        let { title, description, type, longitude, latitude, schedule, tpaId } = req.body;
         const image = req.file ? `/image/${req.file.filename}` : null; // Multer handling image
 
         try {
-            // Menyimpan post baru menggunakan repository
-            const newPost = await postRepository.createPost(title, description, 'Volunteer', image, longitude, latitude, userId, tpaId, schedule);
+            if (type === "Report" || type === "report") {
+                schedule = null;
+            }
+            const newPost = await postRepository.createPost(title, description, type, image, longitude, latitude, userId, tpaId, schedule);
             return res.status(201).json({ message: "Post successfully created", data: newPost });
         } catch (error) {
             return res.status(500).json({ error: "Server error occurred", details: error.message });
         }
     },
 
-    joinVolunteer: async (req, res) => {
-        const { id: userId } = req.userData;
-        const { checkin, postId } = req.body;
-
+    getAllPostsWithinRadius: async (req, res) => {
         try {
-            // Menambah volunteer yang bergabung
-            const newVolunteer = await volunteerRepository.addVolunteer(userId, postId);
-            return res.status(201).json({ message: "Volunteer successfully joined", data: newVolunteer });
+            const { latitude, longitude, radius } = req.query;
+
+            if (!latitude || !longitude || !radius) {
+                return res.status(400).json({ message: "Latitude, longitude, and radius are required" });
+            }
+
+            // Panggil repository untuk mendapatkan postingan dalam radius
+            const posts = await postRepository.getAllPostsWithinRadius(latitude, longitude, parseFloat(radius));
+
+            return res.json({ message: "Success", data: posts });
         } catch (error) {
-            return res.status(500).json({ error: "Server error occurred", details: error.message });
+            return res.status(500).json({ message: error.message });
         }
     }
 };

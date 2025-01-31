@@ -1,21 +1,20 @@
 const volunteerRepository = require("../repositories/volunteerRepository");
 
-class VolunteerController {
-    async registerVolunteer(req, res) {
+module.exports = {
+    joinVolunteer: async (req, res) => {
+        const { id: userId } = req.userData;
+        const { postId } = req.body;
+
         try {
-            const { userId, postId } = req.body;
-            if (!userId || !postId) {
-                return res.status(400).json({ message: "userId and postId are required" });
-            }
-
-            const volunteer = await volunteerRepository.addVolunteer(userId, postId);
-            res.status(201).json(volunteer);
+            // Menambah volunteer yang bergabung
+            const newVolunteer = await volunteerRepository.addVolunteer(userId, postId);
+            return res.status(201).json({ message: "Volunteer successfully joined", data: newVolunteer });
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            return res.status(500).json({ error: "Server error occurred", details: error.message });
         }
-    }
+    },
 
-    async getVolunteersByPost(req, res) {
+    getVolunteersByPost: async (req, res) => {
         try {
             const { postId } = req.params;
             const volunteers = await volunteerRepository.getVolunteersByPost(postId);
@@ -23,9 +22,9 @@ class VolunteerController {
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
-    }
+    },
 
-    async getVolunteersByUser(req, res) {
+    getVolunteersByUser: async (req, res) => {
         try {
             const { userId } = req.params;
             const posts = await volunteerRepository.getVolunteersByUser(userId);
@@ -33,9 +32,9 @@ class VolunteerController {
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
-    }
+    },
 
-    async deleteVolunteer(req, res) {
+    deleteVolunteer: async (req, res) => {
         try {
             const { volunteerId } = req.params;
             await volunteerRepository.deleteVolunteer(volunteerId);
@@ -46,4 +45,3 @@ class VolunteerController {
     }
 }
 
-module.exports = new VolunteerController();

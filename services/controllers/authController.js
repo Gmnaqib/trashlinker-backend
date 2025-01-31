@@ -41,5 +41,26 @@ module.exports = {
                 message: error.message
             });
         }
+    },
+    me: async (req, res) => {
+        const { id } = req.userData;
+
+        try {
+            const user = await userRepository.getUserById(id);
+
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            return res.status(200).json({
+                message: "Get current user success",
+                data: user
+            });
+        } catch (error) {
+            return res.status(500).json({
+                message: "Server error",
+                error: error.message
+            });
+        }
     }
 };
