@@ -32,5 +32,14 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
+    },
+
+    getAllPosts: async (req, res) => {
+        try {
+            const posts = await postRepository.getAllPosts();
+            return res.json({ message: "Success", data: posts });
+        } catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
     }
 };

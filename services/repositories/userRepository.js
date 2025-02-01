@@ -36,6 +36,38 @@ class UserRepository {
             throw new Error(`Database error: ${error.message}`);
         }
     }
+
+    async updateUser(id, userData) {
+        try {
+            // Menyusun query untuk update data, hanya update yang ada dalam userData
+            let updateQuery = "UPDATE user SET ";
+            let values = [];
+            let fields = [];
+
+            // Iterasi untuk memeriksa jika field ada dalam userData, lalu membangun query update
+            for (let field in userData) {
+                if (userData[field] !== undefined) {
+                    fields.push(`${field} = ?`);
+                    values.push(userData[field]);
+                }
+            }
+
+            // Menyusun query berdasarkan fields yang diupdate
+            if (fields.length > 0) {
+                updateQuery += fields.join(", ") + " WHERE id = ?";
+                values.push(id); // Menambahkan ID user untuk WHERE clause
+                const [result] = await db.query(updateQuery, values);
+
+                return result; // Mengembalikan hasil query update
+            } else {
+                throw new Error("No valid fields to update");
+            }
+        } catch (error) {
+            throw new Error(`Database error: ${error.message}`);
+        }
+    }
 }
+
+
 
 module.exports = new UserRepository();
