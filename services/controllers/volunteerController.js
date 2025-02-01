@@ -25,7 +25,7 @@ module.exports = {
 
     getVolunteersByUser: async (req, res) => {
         try {
-            const { userId } = req.params;
+            const { id: userId } = req.userData;
             const posts = await volunteerRepository.getVolunteersByUser(userId);
             res.status(200).json(posts);
         } catch (error) {
@@ -38,6 +38,17 @@ module.exports = {
             const { volunteerId } = req.params;
             await volunteerRepository.deleteVolunteer(volunteerId);
             res.status(200).json({ message: "Volunteer deleted successfully" });
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
+
+    updateVolunteer: async (req, res) => {
+        try {
+            const { volunteerId } = req.params;
+            const { checkin } = req.body;
+            await volunteerRepository.updateVolunteer(volunteerId, checkin);
+            res.status(200).json({ message: "Volunteer updated successfully" });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
