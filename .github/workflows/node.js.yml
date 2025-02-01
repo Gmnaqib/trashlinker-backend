@@ -1,49 +1,23 @@
-name: Node.js CI/CD
+name: Deploy to Production
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [22.x]
-
-    steps:
-      - name: Install SSH
-        run: sudo apt-get install openssh-client
-      
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
-      - name: Install Dependencies
-        run: npm install
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup SSH Agent
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.VPS_KEY }}
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
 
-      - name: Deploy Application to VPS
+      - name: Deploy to Server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOSTNAME }} << 'EOF'
-          cd apps/trashlinker-backend
-          git pull
-          npm install
-          pm2 restart 0
+          sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOSTNAME }} << EOF
+            cd app/trashlinker-backend
+            git pull origin main
+            npm install
+            pm2 restart all
           EOF
