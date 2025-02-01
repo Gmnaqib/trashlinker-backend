@@ -9,5 +9,6 @@ router.post("/", authMiddleware, upload.single("image"), postController.addPost)
 router.get("/", authMiddleware, postController.getAllPostsWithinRadius);
 router.get("/", authMiddleware, postController.getAllPosts);
 router.patch("/:id", authMiddleware, postController.updatePost);
+router.delete("/:id", authMiddleware, postController.deletePost);
 
 module.exports = router;

@@ -55,4 +55,15 @@ module.exports = {
             return res.status(500).json({ message: error.message });
         }
     },
+
+    deletePost: async (req, res) => {
+        const { id: postId } = req.params;
+
+        try {
+            await postRepository.deletePost(postId);
+            return res.json({ message: "Post deleted successfully" });
+        } catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
+    }
 };
