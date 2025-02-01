@@ -6,7 +6,6 @@ module.exports = {
         const { postId } = req.body;
 
         try {
-            // Menambah volunteer yang bergabung
             const newVolunteer = await volunteerRepository.addVolunteer(userId, postId);
             return res.status(201).json({ message: "Volunteer successfully joined", data: newVolunteer });
         } catch (error) {

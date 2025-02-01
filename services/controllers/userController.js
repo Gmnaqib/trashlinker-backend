@@ -25,8 +25,8 @@ class UserController {
     }
 
     async updateUser(req, res) {
-        const { id } = req.userData; // Mengambil ID user dari token
-        const userData = req.body; // Mengambil data user yang ingin diupdate dari body
+        const { id } = req.userData;
+        const userData = req.body;
 
         try {
             const updatedUser = await userRepository.updateUser(id, userData);

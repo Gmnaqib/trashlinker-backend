@@ -22,6 +22,8 @@ module.exports = {
                 name: user.username,
                 email: user.email,
                 role: user.role,
+                latitude: user.latitude,
+                longitude: user.longitude
             };
 
             const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "5h" });
@@ -33,6 +35,8 @@ module.exports = {
                     name: user.username,
                     email: user.email,
                     role: user.role,
+                    latitude: user.latitude,
+                    longitude: user.longitude,
                     token: token
                 }
             });
