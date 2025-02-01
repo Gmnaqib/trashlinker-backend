@@ -6,7 +6,8 @@ const upload = require("../../utils/upload");
 
 // Route to create a new post
 router.post("/", authMiddleware, upload.single("image"), postController.addPost);
-router.get("/radius", authMiddleware, postController.getAllPostsWithinRadius);
+router.get("/", authMiddleware, postController.getAllPostsWithinRadius);
 router.get("/", authMiddleware, postController.getAllPosts);
+router.patch("/:id", authMiddleware, postController.updatePost);
 
 module.exports = router;
