@@ -1,5 +1,5 @@
 const db = require("../../config/database");
-const Post = require("../models/post");
+const Post = require("../models/Post");
 const haversine = require("haversine-distance");
 
 class PostRepository {
