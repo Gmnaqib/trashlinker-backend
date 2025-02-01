@@ -5,7 +5,6 @@ const router = require('./router/index');
 const cors = require('cors');
 require('dotenv').config();
 
-// Mengizinkan semua origin dengan CORS
 app.use(cors());
 
 app.use(express.json());
