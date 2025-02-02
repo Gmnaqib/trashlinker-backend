@@ -66,6 +66,16 @@ class UserRepository {
             throw new Error(`Database error: ${error.message}`);
         }
     }
+
+    async getAllUser() {
+        try {
+            const sql = "SELECT * from user";
+            const [rows] = await db.execute(sql);
+            return rows;
+        } catch (error) {
+            throw new Error(`Database error: ${error.message}`);
+        }
+    }
 }
 
 
