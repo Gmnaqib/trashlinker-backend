@@ -20,6 +20,52 @@ class PostRepository {
         return new Post(row.id, row.title, row.description, row.type, row.image, row.longitude, row.latitude, row.userId, row.tpaId, row.schedule, row.createdAt, row.updatedAt);
     }
 
+    // async getAllPosts() {
+    //     const sql = `
+    //     SELECT 
+    //         post.id, 
+    //         post.title, 
+    //         post.description, 
+    //         post.type, 
+    //         post.image, 
+    //         post.longitude, 
+    //         post.latitude, 
+    //         post.userId, 
+    //         user.username AS userName, 
+    //         user.address AS userAddress,
+    //         post.tpaId, 
+    //         tpa.tpa_name AS tpaName,
+    //         tpa.tpa_location AS tpaAddress,
+    //         post.schedule, 
+    //         post.createdAt, 
+    //         post.updatedAt
+    //     FROM post
+    //     JOIN user ON post.userId = user.id
+    //     JOIN tpa ON post.tpaId = tpa.id
+    //     ORDER BY post.createdAt DESC
+    // `;
+
+    //     const [rows] = await db.execute(sql);
+    //     return rows.map(row => ({
+    //         id: row.id,
+    //         title: row.title,
+    //         description: row.description,
+    //         type: row.type,
+    //         image: row.image,
+    //         longitude: row.longitude,
+    //         latitude: row.latitude,
+    //         userId: row.userId,
+    //         userName: row.userName,
+    //         userAddress: row.userAddress,
+    //         tpaId: row.tpaId,
+    //         tpaName: row.tpaName,
+    //         tpaAddress: row.tpaAddress,
+    //         schedule: row.schedule,
+    //         createdAt: row.createdAt,
+    //         updatedAt: row.updatedAt
+    //     }));
+    // }
+
     async getAllPosts() {
         const sql = `
         SELECT 
@@ -38,10 +84,13 @@ class PostRepository {
             tpa.tpa_location AS tpaAddress,
             post.schedule, 
             post.createdAt, 
-            post.updatedAt
+            post.updatedAt,
+            COUNT(volunteer.id) AS volunteerCount
         FROM post
         JOIN user ON post.userId = user.id
         JOIN tpa ON post.tpaId = tpa.id
+        LEFT JOIN volunteer ON volunteer.postId = post.id
+        GROUP BY post.id
         ORDER BY post.createdAt DESC
     `;
 
@@ -62,7 +111,8 @@ class PostRepository {
             tpaAddress: row.tpaAddress,
             schedule: row.schedule,
             createdAt: row.createdAt,
-            updatedAt: row.updatedAt
+            updatedAt: row.updatedAt,
+            volunteerCount: row.volunteerCount // Menambahkan jumlah volunteer
         }));
     }
 
