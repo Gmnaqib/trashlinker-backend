@@ -53,7 +53,7 @@ class VolunteerRepository {
 
   async getVolunteersByUser(userId) {
     const sql = `
-      SELECT v.*, p.title
+      SELECT v.*, p.title, p.schedule
       FROM volunteer v
       JOIN post p ON v.postId = p.id
       WHERE v.userId = ?
