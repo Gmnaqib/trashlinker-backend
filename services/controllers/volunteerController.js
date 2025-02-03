@@ -17,7 +17,8 @@ module.exports = {
         try {
             const { postId } = req.params;
             const volunteers = await volunteerRepository.getVolunteersByPost(postId);
-            res.status(200).json(volunteers);
+            const totalVolunteers = volunteers.length;
+            res.status(200).json({ totalVolunteers, volunteers });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
@@ -28,6 +29,24 @@ module.exports = {
             const { id: userId } = req.userData;
             const posts = await volunteerRepository.getVolunteersByUser(userId);
             res.status(200).json(posts);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
+
+    getAllVolunteer: async (req, res) => {
+        try {
+            const volunteers = await volunteerRepository.getAllVolunteer();
+            res.status(200).json(volunteers);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
+
+    getVolunteerLeaderboard: async (req, res) => {
+        try {
+            const leaderboard = await volunteerRepository.getVolunteerLeaderboard();
+            res.status(200).json(leaderboard);
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
