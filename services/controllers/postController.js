@@ -48,6 +48,16 @@ module.exports = {
         }
     },
 
+    getMyposts: async (req, res) => {
+        const { id: userId } = req.userData;
+        try {
+            const posts = await postRepository.myPostRepository(userId);
+            return res.json({ message: "Success", data: posts });
+        } catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
+    },
+
     updatePost: async (req, res) => {
         const { id: postId } = req.params;
         const { title, description, type, longitude, latitude, schedule, fullAddress } = req.body;
