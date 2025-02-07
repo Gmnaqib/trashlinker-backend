@@ -64,7 +64,7 @@ model post {
 
 enum Type {
   Volunteer
-  report
+  Report
 }
 
 model tpa {
@@ -73,7 +73,7 @@ model tpa {
   tpa_location    String
   tpa_image       String
   tpa_description String
-  Post            post[]
+  Posts           post[]
 }
 
 model postVolunteer {
