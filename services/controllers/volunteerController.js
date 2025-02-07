@@ -6,8 +6,18 @@ module.exports = {
         const { postId } = req.body;
 
         try {
-            const newVolunteer = await volunteerRepository.addVolunteer(userId, postId);
-            return res.status(201).json({ message: "Volunteer successfully joined", data: newVolunteer });
+            const newPostVolunteer = await volunteerRepository.addVolunteer(userId, postId);
+            return res.status(201).json({
+                message: "Volunteer successfully joined",
+                data: {
+                    id: newPostVolunteer.id,
+                    volunteerId: newPostVolunteer.volunteerId,
+                    postId: newPostVolunteer.postId,
+                    checkin: newPostVolunteer.checkin,
+                    createdAt: newPostVolunteer.createdAt,
+                    updatedAt: newPostVolunteer.updatedAt
+                }
+            });
         } catch (error) {
             return res.status(500).json({ error: "Server error occurred", details: error.message });
         }
@@ -18,7 +28,18 @@ module.exports = {
             const { postId } = req.params;
             const volunteers = await volunteerRepository.getVolunteersByPost(postId);
             const totalVolunteers = volunteers.length;
-            res.status(200).json({ totalVolunteers, volunteers });
+
+            res.status(200).json({
+                totalVolunteers,
+                volunteers: volunteers.map(v => ({
+                    postVolunteerId: v.id,
+                    volunteerId: v.volunteerId,
+                    postId: v.postId,
+                    checkin: v.checkin,
+                    createdAt: v.createdAt,
+                    updatedAt: v.updatedAt
+                }))
+            });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
@@ -27,8 +48,19 @@ module.exports = {
     getVolunteersByUser: async (req, res) => {
         try {
             const { id: userId } = req.userData;
-            const posts = await volunteerRepository.getVolunteersByUser(userId);
-            res.status(200).json(posts);
+            const userVolunteers = await volunteerRepository.getVolunteersByUser(userId);
+
+            res.status(200).json({
+                totalPosts: userVolunteers.length,
+                data: userVolunteers.map(v => ({
+                    postVolunteerId: v.id,
+                    volunteerId: v.volunteerId,
+                    postId: v.postId,
+                    checkin: v.checkin,
+                    createdAt: v.createdAt,
+                    updatedAt: v.updatedAt
+                }))
+            });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
@@ -37,7 +69,15 @@ module.exports = {
     getAllVolunteer: async (req, res) => {
         try {
             const volunteers = await volunteerRepository.getAllVolunteer();
-            res.status(200).json(volunteers);
+            res.status(200).json({
+                totalVolunteers: volunteers.length,
+                volunteers: volunteers.map(v => ({
+                    id: v.id,
+                    userId: v.userId,
+                    createdAt: v.createdAt,
+                    updatedAt: v.updatedAt
+                }))
+            });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
@@ -46,7 +86,7 @@ module.exports = {
     getVolunteerLeaderboard: async (req, res) => {
         try {
             const leaderboard = await volunteerRepository.getVolunteerLeaderboard();
-            res.status(200).json(leaderboard);
+            res.status(200).json({ leaderboard });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
@@ -72,5 +112,4 @@ module.exports = {
             res.status(500).json({ message: error.message });
         }
     }
-}
-
+};

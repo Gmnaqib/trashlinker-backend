@@ -1,36 +1,69 @@
 const db = require("../../config/database");
 const Volunteer = require("../models/Volunteer");
+const PostVolunteer = require("../models/PostVolunteer");
 
 class VolunteerRepository {
   async addVolunteer(userId, postId) {
-    const sql = `
-      INSERT INTO volunteer (userId, postId, checkin, createdAt, updatedAt)
-      VALUES (?, ?, false, NOW(), NOW())
-    `;
-    const [result] = await db.execute(sql, [userId, postId]);
-    return new Volunteer(result.insertId, false, userId, postId, new Date(), new Date());
+    try {
+      // Cek apakah user sudah menjadi volunteer untuk post ini
+      const checkExisting = `
+        SELECT pv.id FROM postVolunteer pv
+        JOIN volunteer v ON pv.volunteerId = v.id
+        WHERE v.userId = ? AND pv.postId = ?
+      `;
+      const [existing] = await db.execute(checkExisting, [userId, postId]);
+      if (existing.length > 0) {
+        throw new Error("User already joined as volunteer for this post");
+      }
+
+      // Cek apakah user sudah ada di tabel volunteer
+      const checkVolunteer = `SELECT id FROM volunteer WHERE userId = ?`;
+      const [volunteers] = await db.execute(checkVolunteer, [userId]);
+
+      let volunteerId;
+      if (volunteers.length > 0) {
+        volunteerId = volunteers[0].id;
+      } else {
+        const insertVolunteer = `
+          INSERT INTO volunteer (userId, createdAt, updatedAt) VALUES (?, NOW(), NOW())
+        `;
+        const [volunteerResult] = await db.execute(insertVolunteer, [userId]);
+        volunteerId = volunteerResult.insertId;
+      }
+
+      // Insert ke postVolunteer
+      const insertPostVolunteer = `
+        INSERT INTO postVolunteer (volunteerId, postId, checkin, createdAt, updatedAt)
+        VALUES (?, ?, false, NOW(), NOW())
+      `;
+      const [result] = await db.execute(insertPostVolunteer, [volunteerId, postId]);
+
+      return new PostVolunteer(result.insertId, volunteerId, postId, false, new Date(), new Date());
+    } catch (error) {
+      throw new Error(`Database error: ${error.message}`);
+    }
   }
 
   async getAllVolunteer() {
     const sql = `SELECT * FROM volunteer`;
     const [result] = await db.execute(sql);
-    return result;
+    return result.map(row => new Volunteer(row.id, row.userId, row.createdAt, row.updatedAt));
   }
 
   async getVolunteerLeaderboard() {
     try {
       const sql = `
-            SELECT 
-                user.id AS userId, 
-                user.username,  
-                COUNT(volunteer.id) AS totalActivities
-            FROM volunteer
-            JOIN user ON volunteer.userId = user.id
-            WHERE volunteer.checkin = TRUE
-            GROUP BY user.id
-            ORDER BY totalActivities DESC, user.username ASC;
-        `;
-
+        SELECT 
+          u.id AS userId, 
+          u.username,  
+          COUNT(pv.id) AS totalActivities
+        FROM postVolunteer pv
+        JOIN volunteer v ON pv.volunteerId = v.id
+        JOIN user u ON v.userId = u.id
+        WHERE pv.checkin = TRUE
+        GROUP BY u.id
+        ORDER BY totalActivities DESC, u.username ASC;
+      `;
       const [result] = await db.execute(sql);
       return result;
     } catch (error) {
@@ -38,28 +71,29 @@ class VolunteerRepository {
     }
   }
 
-
   async getVolunteersByPost(postId) {
     const sql = `
-      SELECT v.*, u.username, p.title
-      FROM volunteer v
+      SELECT pv.id AS postVolunteerId, v.id AS volunteerId, u.username, p.title, pv.checkin
+      FROM postVolunteer pv
+      JOIN volunteer v ON pv.volunteerId = v.id
       JOIN user u ON v.userId = u.id
-      JOIN post p ON v.postId = p.id
-      WHERE v.postId = ?
+      JOIN post p ON pv.postId = p.id
+      WHERE pv.postId = ?
     `;
     const [rows] = await db.execute(sql, [postId]);
-    return rows;
+    return rows.map(row => new PostVolunteer(row.postVolunteerId, row.volunteerId, postId, row.checkin, new Date(), new Date()));
   }
 
   async getVolunteersByUser(userId) {
     const sql = `
-      SELECT v.*, p.title, p.schedule
-      FROM volunteer v
-      JOIN post p ON v.postId = p.id
+      SELECT pv.id AS postVolunteerId, v.id AS volunteerId, p.title, p.schedule, pv.checkin
+      FROM postVolunteer pv
+      JOIN volunteer v ON pv.volunteerId = v.id
+      JOIN post p ON pv.postId = p.id
       WHERE v.userId = ?
     `;
     const [rows] = await db.execute(sql, [userId]);
-    return rows;
+    return rows.map(row => new PostVolunteer(row.postVolunteerId, row.volunteerId, row.postId, row.checkin, new Date(), new Date()));
   }
 
   async deleteVolunteer(volunteerId) {
@@ -70,9 +104,9 @@ class VolunteerRepository {
 
   async updateVolunteer(volunteerId, checkin) {
     const sql = `
-      UPDATE volunteer 
+      UPDATE postVolunteer 
       SET checkin = ?
-      WHERE id = ?
+      WHERE volunteerId = ?
     `;
     await db.execute(sql, [checkin, volunteerId]);
     return { message: "Volunteer updated successfully" };

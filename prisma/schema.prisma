@@ -29,14 +29,12 @@ model user {
 }
 
 model volunteer {
-  id        Int      @id @default(autoincrement())
-  checkin   Boolean  @default(false)
+  id        Int             @id @default(autoincrement())
   userId    Int
-  postId    Int
-  user      user     @relation(fields: [userId], references: [id])
-  post      post     @relation(fields: [postId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  user      user            @relation(fields: [userId], references: [id])
+  posts     postVolunteer[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @default(now()) @updatedAt
 }
 
 enum Role {
@@ -46,26 +44,27 @@ enum Role {
 }
 
 model post {
-  id          Int         @id @default(autoincrement())
+  id          Int             @id @default(autoincrement())
   title       String?
   description String?
-  type        Type        @default(Volunteer)
+  type        Type            @default(Volunteer)
   image       String
   longitude   Float
   latitude    Float
-  volunteer   volunteer[]
+  fullAddress String?
+  volunteers  postVolunteer[]
   schedule    DateTime?
   userId      Int
   tpaId       Int
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @default(now()) @updatedAt
-  User        user        @relation(fields: [userId], references: [id])
-  tpa         tpa         @relation(fields: [tpaId], references: [id])
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now()) @updatedAt
+  User        user            @relation(fields: [userId], references: [id])
+  tpa         tpa             @relation(fields: [tpaId], references: [id])
 }
 
 enum Type {
   Volunteer
-  report
+  Report
 }
 
 model tpa {
@@ -74,5 +73,25 @@ model tpa {
   tpa_location    String
   tpa_image       String
   tpa_description String
-  Post            post[]
+  Posts           post[]
+}
+
+model postVolunteer {
+  id          Int       @id @default(autoincrement())
+  volunteerId Int
+  postId      Int
+  checkin     Boolean   @default(false)
+  volunteer   volunteer @relation(fields: [volunteerId], references: [id])
+  post        post      @relation(fields: [postId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+}
+
+model logVolunteer {
+  id          Int      @id @default(autoincrement())
+  volunteerId Int
+  postId      Int
+  action      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 }

@@ -26,7 +26,8 @@ module.exports = {
                 longitude: user.longitude
             };
 
-            const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "5h" });
+            const token = jwt.sign(payload, process.env.JWT_SECRET);
+            // const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "5h" });
 
             res.status(200).json({
                 message: "Login successful",
