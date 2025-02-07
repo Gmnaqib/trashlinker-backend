@@ -12,6 +12,13 @@ class PostRepository {
         return new Post(result.insertId, title, description, type, image, longitude, latitude, userId, tpaId, schedule, fullAddress, new Date(), new Date());
     }
 
+    async myPostRepository(userId) {
+        const sql = `SELECT * FROM post WHERE userId = ?`;
+        const [rows] = await db.execute(sql, [userId]);
+
+        return rows.map(row => new Post(row.id, row.title, row.description, row.type, row.image, row.longitude, row.latitude, row.userId, row.tpaId, row.schedule, row.fullAddress, row.createdAt, row.updatedAt));
+    }
+
     async getReportPost() {
         const sql = `
         SELECT 
