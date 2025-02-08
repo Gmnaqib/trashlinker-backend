@@ -97,7 +97,7 @@ class VolunteerRepository {
   }
 
   async deleteVolunteer(volunteerId) {
-    const sql = `DELETE FROM volunteer WHERE id = ?`;
+    const sql = `DELETE FROM postvolunteer WHERE id = ?`;
     await db.execute(sql, [volunteerId]);
     return { message: "Volunteer deleted successfully" };
   }
