@@ -1,4 +1,5 @@
 const volunteerRepository = require("../repositories/volunteerRepository");
+const response = require("../../utils/response");
 
 module.exports = {
     joinVolunteer: async (req, res) => {
@@ -49,18 +50,7 @@ module.exports = {
         try {
             const { id: userId } = req.userData;
             const userVolunteers = await volunteerRepository.getVolunteersByUser(userId);
-
-            res.status(200).json({
-                totalPosts: userVolunteers.length,
-                data: userVolunteers.map(v => ({
-                    postVolunteerId: v.id,
-                    volunteerId: v.volunteerId,
-                    postId: v.postId,
-                    checkin: v.checkin,
-                    createdAt: v.createdAt,
-                    updatedAt: v.updatedAt
-                }))
-            });
+            return response({ res, data: userVolunteers, code: 200, message: "Get My Volunteer Success" })
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
@@ -69,15 +59,8 @@ module.exports = {
     getAllVolunteer: async (req, res) => {
         try {
             const volunteers = await volunteerRepository.getAllVolunteer();
-            res.status(200).json({
-                totalVolunteers: volunteers.length,
-                volunteers: volunteers.map(v => ({
-                    id: v.id,
-                    userId: v.userId,
-                    createdAt: v.createdAt,
-                    updatedAt: v.updatedAt
-                }))
-            });
+            console.log("controller", volunteers);
+            return response({ res, data: volunteers, code: 200, message: "Get All Volunteer Success" })
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
@@ -86,7 +69,7 @@ module.exports = {
     getVolunteerLeaderboard: async (req, res) => {
         try {
             const leaderboard = await volunteerRepository.getVolunteerLeaderboard();
-            res.status(200).json({ leaderboard });
+            return response({ res, data: leaderboard, code: 200, message: "Get Leaderboard Success" })
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
