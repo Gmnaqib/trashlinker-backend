@@ -45,7 +45,7 @@ class VolunteerRepository {
   }
 
   async getAllVolunteer() {
-    const sql = `SELECT postvolunteer.id, postvolunteer.volunteerId, postvolunteer.checkin, postvolunteer.postId, post.schedule, postvolunteer.createdAt, postvolunteer.updatedAt FROM postvolunteer JOIN post ON postvolunteer.postId = post.id;`;
+    const sql = `SELECT postVolunteer.id, postVolunteer.volunteerId, postVolunteer.checkin, postVolunteer.postId, post.schedule, postVolunteer.createdAt, postVolunteer.updatedAt FROM postVolunteer JOIN post ON postVolunteer.postId = post.id;`;
     const [result] = await db.execute(sql);
     return result;
   }
@@ -97,7 +97,7 @@ class VolunteerRepository {
   }
 
   async deleteVolunteer(volunteerId) {
-    const sql = `DELETE FROM postvolunteer WHERE id = ?`;
+    const sql = `DELETE FROM postVolunteer WHERE id = ?`;
     await db.execute(sql, [volunteerId]);
     return { message: "Volunteer deleted successfully" };
   }

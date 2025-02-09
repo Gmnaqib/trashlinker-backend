@@ -65,7 +65,7 @@ module.exports = {
             res.status(500).json({ message: error.message });
         }
     },
-
+    // Untuk Leaderboard
     getVolunteerLeaderboard: async (req, res) => {
         try {
             const leaderboard = await volunteerRepository.getVolunteerLeaderboard();
@@ -74,7 +74,7 @@ module.exports = {
             res.status(500).json({ message: error.message });
         }
     },
-
+    // Hapus Volunteer
     deleteVolunteer: async (req, res) => {
         try {
             const { volunteerId } = req.params;
