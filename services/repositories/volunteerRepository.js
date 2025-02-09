@@ -1,5 +1,5 @@
 const db = require("../../config/database");
-const Volunteer = require("../models/Volunteer");
+// const Volunteer = require("../models/Volunteer");
 const PostVolunteer = require("../models/PostVolunteer");
 
 class VolunteerRepository {
@@ -45,9 +45,9 @@ class VolunteerRepository {
   }
 
   async getAllVolunteer() {
-    const sql = `SELECT * FROM volunteer`;
+    const sql = `SELECT postvolunteer.id, postvolunteer.volunteerId, postvolunteer.checkin, postvolunteer.postId, post.schedule, postvolunteer.createdAt, postvolunteer.updatedAt FROM postvolunteer JOIN post ON postvolunteer.postId = post.id;`;
     const [result] = await db.execute(sql);
-    return result.map(row => new Volunteer(row.id, row.userId, row.createdAt, row.updatedAt));
+    return result;
   }
 
   async getVolunteerLeaderboard() {
