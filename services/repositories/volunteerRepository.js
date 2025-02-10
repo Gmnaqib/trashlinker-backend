@@ -102,13 +102,13 @@ class VolunteerRepository {
     return { message: "Volunteer deleted successfully" };
   }
 
-  async updateVolunteer(volunteerId, checkin) {
+  async updateVolunteer(id, checkin) {
     const sql = `
       UPDATE postVolunteer 
       SET checkin = ?
       WHERE id = ?
     `;
-    await db.execute(sql, [checkin, volunteerId]);
+    await db.execute(sql, [checkin, id]);
     return { message: "Volunteer updated successfully" };
   }
 }
