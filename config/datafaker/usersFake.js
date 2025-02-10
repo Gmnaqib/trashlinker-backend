@@ -6,7 +6,7 @@ async function connectToDatabase() {
   return mysql.createConnection({
     host: 'localhost',
     user: 'root', // Ganti dengan username Anda
-    password:'', // Ganti dengan password Anda
+    password: '', // Ganti dengan password Anda
     database: 'trash_linker', // Ganti dengan nama database Anda
   });
 }
@@ -14,7 +14,7 @@ async function connectToDatabase() {
 // Fungsi untuk mengisi data dummy
 async function seedDatabase() {
   const connection = await connectToDatabase();
-  
+
   try {
     const dummyData = [];
     for (let i = 0; i < 10; i++) {
