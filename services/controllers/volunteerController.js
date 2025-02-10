@@ -87,9 +87,9 @@ module.exports = {
 
     updateVolunteer: async (req, res) => {
         try {
-            const { volunteerId } = req.params;
+            const { id } = req.params;
             const { checkin } = req.body;
-            await volunteerRepository.updateVolunteer(volunteerId, checkin);
+            await volunteerRepository.updateVolunteer(id, checkin);
             res.status(200).json({ message: "Volunteer updated successfully" });
         } catch (error) {
             res.status(500).json({ message: error.message });

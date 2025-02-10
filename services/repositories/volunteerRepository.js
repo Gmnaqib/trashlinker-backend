@@ -106,7 +106,7 @@ class VolunteerRepository {
     const sql = `
       UPDATE postVolunteer 
       SET checkin = ?
-      WHERE volunteerId = ?
+      WHERE id = ?
     `;
     await db.execute(sql, [checkin, volunteerId]);
     return { message: "Volunteer updated successfully" };
