@@ -8,7 +8,7 @@ router.get("/", authMiddleware, volunteerController.getAllVolunteer);
 router.get("/leaderboard", authMiddleware, volunteerController.getVolunteerLeaderboard);
 router.get("/me", authMiddleware, volunteerController.getVolunteersByUser);
 router.get("/post/:postId", volunteerController.getVolunteersByPost);
-router.delete("/:volunteerId", volunteerController.deleteVolunteer);
-router.patch("/:volunteerId", volunteerController.updateVolunteer);
+router.delete("/:id", volunteerController.deleteVolunteer);
+router.patch("/:id", volunteerController.updateVolunteer);
 
 module.exports = router;

@@ -77,8 +77,8 @@ module.exports = {
     // Hapus Volunteer
     deleteVolunteer: async (req, res) => {
         try {
-            const { volunteerId } = req.params;
-            await volunteerRepository.deleteVolunteer(volunteerId);
+            const { id } = req.params;
+            await volunteerRepository.deleteVolunteer(id);
             res.status(200).json({ message: "Volunteer deleted successfully" });
         } catch (error) {
             res.status(500).json({ message: error.message });
@@ -89,6 +89,7 @@ module.exports = {
         try {
             const { id } = req.params;
             const { checkin } = req.body;
+            console.log(id, checkin);
             await volunteerRepository.updateVolunteer(id, checkin);
             res.status(200).json({ message: "Volunteer updated successfully" });
         } catch (error) {
