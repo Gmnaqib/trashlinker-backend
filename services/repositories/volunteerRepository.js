@@ -96,9 +96,9 @@ class VolunteerRepository {
     return rows.map(row => new PostVolunteer(row.postVolunteerId, row.volunteerId, row.postId, row.checkin, new Date(), new Date()));
   }
 
-  async deleteVolunteer(volunteerId) {
+  async deleteVolunteer(id) {
     const sql = `DELETE FROM postVolunteer WHERE id = ?`;
-    await db.execute(sql, [volunteerId]);
+    await db.execute(sql, [id]);
     return { message: "Volunteer deleted successfully" };
   }
 
