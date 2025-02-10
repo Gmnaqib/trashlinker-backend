@@ -87,7 +87,7 @@ class VolunteerRepository {
 
   async getVolunteersByUser(userId) {
     const sql = `
-      SELECT pv.id AS postVolunteerId, v.id AS volunteerId, p.title, p.schedule, pv.checkin
+      SELECT pv.id AS postVolunteerId, v.id AS volunteerId, p.id AS postId , p.title, p.schedule, pv.checkin
       FROM postVolunteer pv
       JOIN volunteer v ON pv.volunteerId = v.id
       JOIN post p ON pv.postId = p.id
