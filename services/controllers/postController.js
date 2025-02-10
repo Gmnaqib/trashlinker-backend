@@ -62,7 +62,6 @@ module.exports = {
         const { id: postId } = req.params;
         const { title, description, type, longitude, latitude, schedule, fullAddress } = req.body;
         const image = req.file ? `/image/${req.file.filename}` : null;
-        console.log(req.body);
 
         try {
             await postRepository.updatePost(postId, title, description, type, image, longitude, latitude, schedule, fullAddress);
@@ -87,7 +86,6 @@ module.exports = {
         const { id: postId } = req.params;
         const { id: userId } = req.userData;
         const { schedule, type } = req.body;
-        console.log(req.params);
 
         try {
             await postRepository.updateToVolunteer(postId, userId, schedule, type);

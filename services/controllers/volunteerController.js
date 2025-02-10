@@ -59,7 +59,6 @@ module.exports = {
     getAllVolunteer: async (req, res) => {
         try {
             const volunteers = await volunteerRepository.getAllVolunteer();
-            console.log("controller", volunteers);
             return response({ res, data: volunteers, code: 200, message: "Get All Volunteer Success" })
         } catch (error) {
             res.status(500).json({ message: error.message });
@@ -89,7 +88,6 @@ module.exports = {
         try {
             const { id } = req.params;
             const { checkin } = req.body;
-            console.log(id, checkin);
             await volunteerRepository.updateVolunteer(id, checkin);
             res.status(200).json({ message: "Volunteer updated successfully" });
         } catch (error) {

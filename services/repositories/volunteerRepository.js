@@ -1,6 +1,7 @@
 const db = require("../../config/database");
 // const Volunteer = require("../models/Volunteer");
 const PostVolunteer = require("../models/PostVolunteer");
+// const response = require("../../utils/response");
 
 class VolunteerRepository {
   async addVolunteer(userId, postId) {
@@ -93,7 +94,7 @@ class VolunteerRepository {
       WHERE v.userId = ?
     `;
     const [rows] = await db.execute(sql, [userId]);
-    return rows.map(row => new PostVolunteer(row.postVolunteerId, row.volunteerId, row.postId, row.checkin, new Date(), new Date()));
+    return rows;
   }
 
   async deleteVolunteer(id) {

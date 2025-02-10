@@ -26,7 +26,6 @@ module.exports = {
         try {
             const { tpa_name, tpa_location, tpa_description } = req.body;
             const tpa_image = req.file ? `/image/${req.file.filename}` : null;
-            console.log(tpa_location);
 
             const newTpa = await tpaRepository.createTpa({ tpa_name, tpa_location, tpa_image, tpa_description });
             return res.status(201).json({ message: "TPA successfully created", data: newTpa });
