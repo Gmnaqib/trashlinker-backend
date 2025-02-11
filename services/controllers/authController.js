@@ -14,7 +14,7 @@ module.exports = {
 
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (!isPasswordValid) {
-                return res.status(401).json({ message: "Invalid credentials" });
+                return res.status(401).json({ message: "Wrong password" });
             }
 
             const payload = {
