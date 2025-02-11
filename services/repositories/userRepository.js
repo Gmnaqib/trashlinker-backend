@@ -4,6 +4,12 @@ const bcrypt = require("bcrypt");
 class UserRepository {
     async registration(user) {
         try {
+
+            const existingUser = await db.query("SELECT id FROM user WHERE email = ?", [user.email]);
+
+            if (existingUser[0].length > 0) {
+                throw new Error("Email already register");
+            }
             // Hash password secara asynchronous
             const hashedPassword = await bcrypt.hash(user.password, 10);
 
