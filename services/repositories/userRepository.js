@@ -8,7 +8,7 @@ class UserRepository {
             const existingUser = await db.query("SELECT id FROM user WHERE email = ?", [user.email]);
 
             if (existingUser[0].length > 0) {
-                throw new Error("Email already register");
+                return { message: "Email already registered" };
             }
             // Hash password secara asynchronous
             const hashedPassword = await bcrypt.hash(user.password, 10);
