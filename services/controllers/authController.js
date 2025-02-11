@@ -2,8 +2,8 @@ const userRepository = require("../repositories/userRepository");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-module.exports = {
-    login: async (req, res) => {
+class AuthController {
+    async login(req, res) {
         try {
             const { email, password } = req.body;
             const user = await userRepository.login(email);
@@ -46,8 +46,8 @@ module.exports = {
                 message: error.message
             });
         }
-    },
-    me: async (req, res) => {
+    }
+    async me(req, res) {
         const { id } = req.userData;
 
         try {
@@ -69,3 +69,5 @@ module.exports = {
         }
     }
 };
+
+module.exports = new AuthController();

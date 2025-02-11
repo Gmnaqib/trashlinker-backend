@@ -1,4 +1,3 @@
-const User = require("../models/User");
 const userRepository = require("../repositories/userRepository");
 
 class UserController {
@@ -10,14 +9,9 @@ class UserController {
                 return res.status(400).json({ message: "Email, username, and password are required" });
             }
 
-            const newUser = new User(email, username, password, address, longitude, latitude, role);
+            await userRepository.registration({ email, username, password, address, longitude, latitude, role });
 
-            const result = await userRepository.registration(newUser);
-
-            res.status(201).json({
-                message: "User registered successfully",
-                userId: result.insertId,
-            });
+            return res.status(201).json({ message: "Register success" });
 
         } catch (error) {
             res.status(500).json({ message: `Error: ${error.message}` });
