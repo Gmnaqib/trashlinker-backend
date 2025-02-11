@@ -1,16 +1,16 @@
 const tpaRepository = require("../repositories/tpaRepository");
 
-module.exports = {
-    getAllTpa: async (req, res) => {
+class tpaController {
+    async getAllTpa(req, res) {
         try {
             const tpas = await tpaRepository.getAllTpa();
             return res.status(200).json({ message: "Success", data: tpas });
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
-    },
+    }
 
-    getTpaById: async (req, res) => {
+    async getTpaById(req, res) {
         try {
             const tpa = await tpaRepository.getTpaById(req.params.id);
             if (!tpa) {
@@ -20,9 +20,9 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
-    },
+    }
 
-    createTpa: async (req, res) => {
+    async createTpa(req, res) {
         try {
             const { tpa_name, tpa_location, tpa_description } = req.body;
             const tpa_image = req.file ? `/image/${req.file.filename}` : null;
@@ -32,9 +32,9 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
-    },
+    }
 
-    updateTpa: async (req, res) => {
+    async updateTpa(req, res) {
         try {
             const { tpa_name, tpa_location, tpa_description } = req.body;
             const tpa_image = req.file ? `/image/${req.file.filename}` : null;
@@ -44,9 +44,9 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
-    },
+    }
 
-    deleteTpa: async (req, res) => {
+    async deleteTpa(req, res) {
         try {
             await tpaRepository.deleteTpa(req.params.id);
             return res.status(200).json({ message: "TPA successfully deleted" });
@@ -55,3 +55,5 @@ module.exports = {
         }
     }
 };
+
+module.exports = new tpaController();

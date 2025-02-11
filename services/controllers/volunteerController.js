@@ -1,8 +1,8 @@
 const volunteerRepository = require("../repositories/volunteerRepository");
 const response = require("../../utils/response");
 
-module.exports = {
-    joinVolunteer: async (req, res) => {
+class VolunteerController {
+    async joinVolunteer(req, res) {
         const { id: userId } = req.userData;
         const { postId } = req.body;
 
@@ -22,18 +22,39 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({ error: "Server error occurred", details: error.message });
         }
-    },
+    }
 
-    getVolunteersByPost: async (req, res) => {
+    // getVolunteersByPost: async (req, res) => {
+    //     try {
+    //         const { postId } = req.params;
+    //         const volunteers = await volunteerRepository.getVolunteersByPost(postId);
+    //         const totalVolunteers = volunteers.length;
+
+    //         res.status(200).json({
+    //             totalVolunteers,
+    //             volunteers: volunteers.map(v => ({
+    //                 postVolunteerId: v.id,
+    //                 volunteerId: v.volunteerId,
+    //                 postId: v.postId,
+    //                 checkin: v.checkin,
+    //                 createdAt: v.createdAt,
+    //                 updatedAt: v.updatedAt
+    //             }))
+    //         });
+    //     } catch (error) {
+    //         res.status(500).json({ message: error.message });
+    //     }
+    // },
+
+    async getVolunteersByPost(req, res) {
         try {
             const { postId } = req.params;
-            const volunteers = await volunteerRepository.getVolunteersByPost(postId);
-            const totalVolunteers = volunteers.length;
+            const { totalVolunteers, volunteers } = await volunteerRepository.getVolunteersByPost(postId);
 
             res.status(200).json({
                 totalVolunteers,
                 volunteers: volunteers.map(v => ({
-                    postVolunteerId: v.id,
+                    postVolunteerId: v.postVolunteerId, // Fix akses property sesuai yang dikembalikan dari repository
                     volunteerId: v.volunteerId,
                     postId: v.postId,
                     checkin: v.checkin,
@@ -42,11 +63,12 @@ module.exports = {
                 }))
             });
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            res.status(500).json({ message: `Error: ${error.message}` });
         }
-    },
+    }
 
-    getVolunteersByUser: async (req, res) => {
+
+    async getVolunteersByUser(req, res) {
         try {
             const { id: userId } = req.userData;
             const userVolunteers = await volunteerRepository.getVolunteersByUser(userId);
@@ -54,27 +76,27 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
-    },
+    }
 
-    getAllVolunteer: async (req, res) => {
+    async getAllVolunteer(req, res) {
         try {
             const volunteers = await volunteerRepository.getAllVolunteer();
             return response({ res, data: volunteers, code: 200, message: "Get All Volunteer Success" })
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
-    },
+    }
     // Untuk Leaderboard
-    getVolunteerLeaderboard: async (req, res) => {
+    async getVolunteerLeaderboard(req, res) {
         try {
             const leaderboard = await volunteerRepository.getVolunteerLeaderboard();
             return response({ res, data: leaderboard, code: 200, message: "Get Leaderboard Success" })
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
-    },
+    }
     // Hapus Volunteer
-    deleteVolunteer: async (req, res) => {
+    async deleteVolunteer(req, res) {
         try {
             const { id } = req.params;
             await volunteerRepository.deleteVolunteer(id);
@@ -82,9 +104,9 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
-    },
+    }
 
-    updateVolunteer: async (req, res) => {
+    async updateVolunteer(req, res) {
         try {
             const { id } = req.params;
             const { checkin } = req.body;
@@ -95,3 +117,5 @@ module.exports = {
         }
     }
 };
+
+module.exports = new VolunteerController();

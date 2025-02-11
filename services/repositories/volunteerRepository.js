@@ -1,7 +1,4 @@
 const db = require("../../config/database");
-// const Volunteer = require("../models/Volunteer");
-const PostVolunteer = require("../models/PostVolunteer");
-// const response = require("../../utils/response");
 
 class VolunteerRepository {
   async addVolunteer(userId, postId) {
@@ -38,8 +35,12 @@ class VolunteerRepository {
         VALUES (?, ?, false, NOW(), NOW())
       `;
       const [result] = await db.execute(insertPostVolunteer, [volunteerId, postId]);
+      const [newVolunteer] = await db.query(
+        `SELECT * FROM postVolunteer WHERE id = ?`,
+        [result.insertId]
+      );
 
-      return new PostVolunteer(result.insertId, volunteerId, postId, false, new Date(), new Date());
+      return newVolunteer[0];
     } catch (error) {
       throw new Error(`Database error: ${error.message}`);
     }
@@ -72,18 +73,41 @@ class VolunteerRepository {
     }
   }
 
+  // async getVolunteersByPost(postId) {
+  //   const sql = `
+  //     SELECT pv.id AS postVolunteerId, v.id AS volunteerId, u.username, p.title, pv.checkin
+  //     FROM postVolunteer pv
+  //     JOIN volunteer v ON pv.volunteerId = v.id
+  //     JOIN user u ON v.userId = u.id
+  //     JOIN post p ON pv.postId = p.id
+  //     WHERE pv.postId = ?
+  //   `;
+  //   const [rows] = await db.execute(sql, [postId]);
+  //   return rows;
+  // }
+
   async getVolunteersByPost(postId) {
     const sql = `
-      SELECT pv.id AS postVolunteerId, v.id AS volunteerId, u.username, p.title, pv.checkin
+      SELECT 
+        pv.id AS postVolunteerId, 
+        v.id AS volunteerId, 
+        pv.postId, 
+        pv.checkin, 
+        pv.createdAt, 
+        pv.updatedAt
       FROM postVolunteer pv
       JOIN volunteer v ON pv.volunteerId = v.id
-      JOIN user u ON v.userId = u.id
-      JOIN post p ON pv.postId = p.id
       WHERE pv.postId = ?
     `;
+
     const [rows] = await db.execute(sql, [postId]);
-    return rows.map(row => new PostVolunteer(row.postVolunteerId, row.volunteerId, postId, row.checkin, new Date(), new Date()));
+
+    return {
+      totalVolunteers: rows.length, // Hitung jumlah volunteer dari hasil query
+      volunteers: rows
+    };
   }
+
 
   async getVolunteersByUser(userId) {
     const sql = `

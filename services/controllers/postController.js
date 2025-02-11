@@ -1,28 +1,27 @@
 const postRepository = require("../repositories/postRepository");
 
-module.exports = {
-    addPost: async (req, res) => {
-        const { id: userId, role: role } = req.userData;
-        let { title, description, type, longitude, latitude, schedule, fullAddress, tpaId } = req.body;
-
-        if (role !== "COMMUNITY" && type == "Volunteer") {
-            return res.status(403).json({ message: "You can't create volunteer" });
-        }
-
-        const image = req.file ? `/image/${req.file.filename}` : null; // Multer handling image
-
+class PostController {
+    async addPost(req, res) {
         try {
+            const { id: userId, role: role } = req.userData;
+            let { title, description, type, longitude, latitude, schedule, fullAddress, tpaId } = req.body;
+
+            if (role !== "COMMUNITY" && type == "Volunteer") {
+                return res.status(403).json({ message: "You can't create volunteer" });
+            }
+
+            const image = req.file ? `/image/${req.file.filename}` : null;
             if (type === "Report" || type === "report") {
                 schedule = null;
             }
-            const newPost = await postRepository.createPost(title, description, type, image, longitude, latitude, userId, tpaId, schedule, fullAddress);
+            const newPost = await postRepository.createPost({ title, description, type, image, longitude, latitude, userId, tpaId, schedule, fullAddress });
             return res.status(201).json({ message: "Post successfully created", data: newPost });
         } catch (error) {
             return res.status(500).json({ error: "Server error occurred", details: error.message });
         }
-    },
+    }
 
-    getAllPostsWithinRadius: async (req, res) => {
+    async getAllPostsWithinRadius(req, res) {
         try {
             const { latitude: latitude, longitude: longitude } = req.userData;
             const { radius } = req.query;
@@ -37,18 +36,18 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
-    },
+    }
 
-    getAllPosts: async (req, res) => {
+    async getAllPosts(req, res) {
         try {
             const posts = await postRepository.getAllPosts();
             return res.json({ message: "Success", data: posts });
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
-    },
+    }
 
-    getMyposts: async (req, res) => {
+    async getMyposts(req, res) {
         const { id: userId } = req.userData;
         try {
             const posts = await postRepository.myPostRepository(userId);
@@ -56,22 +55,31 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
-    },
+    }
 
-    updatePost: async (req, res) => {
-        const { id: postId } = req.params;
-        const { title, description, type, longitude, latitude, schedule, fullAddress } = req.body;
-        const image = req.file ? `/image/${req.file.filename}` : null;
-
+    async updatePost(req, res) {
         try {
-            await postRepository.updatePost(postId, title, description, type, image, longitude, latitude, schedule, fullAddress);
-            return res.json({ message: "Post updated successfully" });
+            const { id: postId } = req.params;
+            const updates = { ...req.body };
+            console.log(req.params);
+
+            if (req.file) {
+                updates.image = `/image/${req.file.filename}`;
+            }
+
+            if (Object.keys(updates).length === 0) {
+                return res.status(400).json({ message: "No data provided for update" });
+            }
+
+            const updatedPost = await postRepository.updatePost(postId, updates);
+            return res.json({ message: "Post updated successfully", data: updatedPost });
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
-    },
+    }
 
-    deletePost: async (req, res) => {
+
+    async deletePost(req, res) {
         const { id: postId } = req.params;
 
         try {
@@ -80,9 +88,9 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
-    },
+    }
 
-    addToVolunteer: async (req, res) => {
+    async addToVolunteer(req, res) {
         const { id: postId } = req.params;
         const { id: userId } = req.userData;
         const { schedule, type } = req.body;
@@ -93,9 +101,9 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
-    },
+    }
 
-    getReportPost: async (req, res) => {
+    async getReportPost(req, res) {
         try {
             const posts = await postRepository.getReportPost();
             return res.json({ message: "Success", data: posts });
@@ -104,3 +112,5 @@ module.exports = {
         }
     }
 };
+
+module.exports = new PostController();

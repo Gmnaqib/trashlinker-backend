@@ -4,22 +4,13 @@ const bcrypt = require("bcrypt");
 class UserRepository {
     async registration(user) {
         try {
-
-            const existingUser = await db.query("SELECT id FROM user WHERE email = ?", [user.email]);
-
-            if (existingUser[0].length > 0) {
-                throw new Error("Email already registered");
-            }
-            // Hash password secara asynchronous
-            const hashedPassword = await bcrypt.hash(user.password, 10);
-
-            const result = await db.query(
+            const { email, username, password, address, longitude, latitude, role } = user;
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const [result] = await db.query(
                 "INSERT INTO user (email, username, password, address, longitude, latitude, role) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                [user.email, user.username, hashedPassword, user.address, user.longitude, user.latitude, user.role]
+                [email, username, hashedPassword, address, longitude, latitude, role]
             );
-
-            // Mengembalikan ID user yang baru dibuat
-            return { id: result[0].insertId, ...user, password: hashedPassword };
+            return result;
         } catch (error) {
             throw new Error(`Database error: ${error.message}`);
         }

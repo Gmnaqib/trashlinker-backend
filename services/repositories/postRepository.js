@@ -1,22 +1,27 @@
 const db = require("../../config/database");
-const Post = require("../models/Post");
 
 class PostRepository {
-    async createPost(title, description, type, image, longitude, latitude, userId, tpaId, schedule, fullAddress) {
-        const sql = `
-        INSERT INTO post (title, description, type, image, longitude, latitude, userId, tpaId, schedule, fullAddress, createdAt, updatedAt)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
-        `;
-        const [result] = await db.execute(sql, [title, description, type, image, longitude, latitude, userId, tpaId, schedule, fullAddress]);
+    async createPost(post) {
+        try {
+            const { title, description, type, image, longitude, latitude, userId, tpaId, schedule, fullAddress } = post;
+            // const sql = ;
+            const [result] = await db.query(`INSERT INTO post (title, description, type, image, longitude, latitude, userId, tpaId, schedule, fullAddress, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`, [title, description, type, image, longitude, latitude, userId, tpaId, schedule, fullAddress]);
 
-        return new Post(result.insertId, title, description, type, image, longitude, latitude, userId, tpaId, schedule, fullAddress, new Date(), new Date());
+            const [newPost] = await db.query(
+                `SELECT * FROM post WHERE id = ?`,
+                [result.insertId]
+            );
+            return newPost[0];
+        } catch (error) {
+            throw new Error(`Database error: ${error.message}`);
+
+        }
     }
 
     async myPostRepository(userId) {
         const sql = `SELECT * FROM post WHERE userId = ?`;
-        const [rows] = await db.execute(sql, [userId]);
-
-        return rows.map(row => new Post(row.id, row.title, row.description, row.type, row.image, row.longitude, row.latitude, row.userId, row.tpaId, row.schedule, row.fullAddress, row.createdAt, row.updatedAt));
+        const [rows] = await db.query(sql, [userId]);
+        return rows;
     }
 
     async getReportPost() {
@@ -49,38 +54,8 @@ class PostRepository {
         ORDER BY post.createdAt DESC
         `;
 
-        const [rows] = await db.execute(sql);
-
-        return rows.map(row => ({
-            id: row.id,
-            title: row.title,
-            description: row.description,
-            type: row.type,
-            image: row.image,
-            fullAddress: row.fullAddress,
-            longitude: row.longitude,
-            latitude: row.latitude,
-            userId: row.userId,
-            userName: row.userName,
-            userAddress: row.userAddress,
-            tpaId: row.tpaId,
-            tpaName: row.tpaName,
-            tpaAddress: row.tpaAddress,
-            schedule: row.schedule,
-            createdAt: row.createdAt,
-            updatedAt: row.updatedAt,
-            volunteerCount: row.volunteerCount
-        }));
-    }
-
-    async getPostById(postId) {
-        const sql = `SELECT * FROM post WHERE id = ?`;
-        const [rows] = await db.execute(sql, [postId]);
-
-        if (rows.length === 0) return null;
-
-        const row = rows[0];
-        return new Post(row.id, row.title, row.description, row.type, row.image, row.longitude, row.latitude, row.userId, row.tpaId, row.schedule, row.createdAt, row.updatedAt);
+        const [rows] = await db.query(sql);
+        return rows;
     }
 
     async getAllPosts() {
@@ -113,43 +88,25 @@ class PostRepository {
         ORDER BY post.createdAt DESC
         `;
 
-        const [rows] = await db.execute(sql);
-
-        return rows.map(row => ({
-            id: row.id,
-            title: row.title,
-            description: row.description,
-            type: row.type,
-            image: row.image,
-            fullAddress: row.fullAddress,
-            longitude: row.longitude,
-            latitude: row.latitude,
-            userId: row.userId,
-            userName: row.userName,
-            userAddress: row.userAddress,
-            tpaId: row.tpaId,
-            tpaName: row.tpaName,
-            tpaAddress: row.tpaAddress,
-            schedule: row.schedule,
-            createdAt: row.createdAt,
-            updatedAt: row.updatedAt,
-            volunteerCount: row.volunteerCount
-        }));
+        const [rows] = await db.query(sql);
+        return rows;
     }
 
-    async updatePost(postId, title, description, type, image, longitude, latitude, schedule) {
-        const sql = `
-        UPDATE post 
-        SET title = ?, description = ?, type = ?, image = ?, longitude = ?, latitude = ?, schedule = ?, updatedAt = NOW()
-        WHERE id = ?
-        `;
-        const [result] = await db.execute(sql, [title, description, type, image, longitude, latitude, schedule, postId]);
+    async updatePost(postId, updates) {
+        const fields = Object.keys(updates).map(key => `${key} = ?`).join(", ");
+        const values = [...Object.values(updates), postId];
+
+        const sql = `UPDATE post SET ${fields}, updatedAt = NOW() WHERE id = ?`;
+        const [result] = await db.execute(sql, values);
 
         if (result.affectedRows === 0) {
             throw new Error(`Post with ID ${postId} not found`);
         }
 
-        return { message: "Post updated successfully" };
+        // Ambil data terbaru setelah update
+        const [updatedPost] = await db.execute(`SELECT * FROM post WHERE id = ?`, [postId]);
+
+        return updatedPost[0];
     }
 
     async deletePost(postId) {
