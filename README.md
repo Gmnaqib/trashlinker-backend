@@ -2,21 +2,49 @@
 
 To get started with the project, follow these steps:
 
-## 1. Run the development server
+### Clone project
 
-Choose one of the following commands to start the server:
-
-### Create Databases - trash_linker
-
-### Add file .env
 ```bash
-DATABASE_URL="mysql://root:@localhost:3306/trash_linker"
-JWT_SECRET=your_secret_key
+git clone https://github.com/Gmnaqib/trashlinker-backend.git
 ```
 
-### Using npm:
+Get into project folder
 ```bash
-Npm install
-Npx prisma migrate dev
-Npm run dev
+cd trashlinker-backend/
+```
+
+Install depedency
+```bash
+npm install
+```
+
+Create Database with this name
+```bash
+trash_linker
+```
+
+Create .env file
+```bash
+cp .env.example .env
+```
+
+Setting your database
+```bash
+DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"
+```
+OR
+```bash
+DATABASE_URL="mysql://root:@localhost:3306/trash_linker"
+```
+
+Create database table
+```bash
+npx prisma migrate dev
+```
+
+## Run the development server
+
+Run project
+```bash
+npm run dev
 ```
