@@ -28,7 +28,7 @@ Create .env file
 cp .env.example .env
 ```
 
-Setting your database
+Setting your database in .env file
 ```bash
 DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"
 ```
