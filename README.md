@@ -42,6 +42,10 @@ Create database table
 npx prisma migrate dev
 ```
 
+Create folder in root project
+```bash
+public/image
+```
 ## Run the development server
 
 Run project
